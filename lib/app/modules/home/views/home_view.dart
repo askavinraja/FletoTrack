@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:html';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animarker/flutter_map_marker_animation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -11,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
+import 'package:saas_web_app/app/routes/app_pages.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:puppeteer/puppeteer.dart';
 import 'dart:io' as ioo;
@@ -185,8 +187,10 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     var uri = Uri.dataFromString(url);
     bookingId = uri.queryParameters['id'];
-    if (isConnected == false) connectAndListen(bookingId);
-    setPin();
+    if (bookingId != null) {
+      if (isConnected == false) connectAndListen(bookingId);
+      setPin();
+    }
     Fluttertoast.showToast(
       msg: "BOOKING : ${bookingId == null ? "NO TRIPS FOUND" : bookingId}",
     );
@@ -230,7 +234,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          'SAAS Ride Tracking ${bookingId == null ? "" : "#" + bookingId}',
+          'Fleto Ride Tracking ${bookingId == null ? "" : "#" + bookingId}',
           style: GoogleFonts.montserrat(
               fontWeight: FontWeight.bold, color: Colors.white),
         ),
@@ -239,7 +243,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: Stack(
         children: [
-          bookingId == null
+          bookingId != null
               ? Center(
                   child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -309,26 +313,16 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                     ),
-          // RaisedButton(
-          //   onPressed: () async {
-          //     // var browser = await puppeteer.launch();
-          //     // var page = await browser.newPage();
-
-          //     // // Setup the dimensions and user-agent of a particular phone
-          //     // await page.emulate(puppeteer.devices.pixel2XL);
-
-          //     // await page.goto('https://dart.dev', wait: Until.networkIdle);
-
-          //     // // Take a screenshot of the page
-          //     // var screenshot = await page.screenshot();
-
-          //     // // Save it to a file
-          //     // // await ioo.File('example/_github.png').writeAsBytes(screenshot);
-
-          //     // // await browser.close();
-          //   },
-          //   child: Text("DOWNLOAD"),
-          // )
+          Positioned(
+            bottom: 0,
+            child: RaisedButton(
+              color: Colors.amberAccent,
+              onPressed: () async {
+                Get.toNamed(Routes.FIREBASE);
+              },
+              child: Text("View DB"),
+            ),
+          )
         ],
       ),
     );

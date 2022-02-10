@@ -18,6 +18,9 @@ dependencies:
   maps_curved_line: ^1.0.2
   puppeteer: 
   flutter_spinkit: 
+  cloud_firestore: ^3.1.7
+  intl:
+  syncfusion_flutter_datagrid: ^19.4.50
   
   # url_launcher: 
 
@@ -35,6 +38,8 @@ flutter:
 
   assets:
     - assets/maps/
+    # - assets/images/
+
     
   uses-material-design: true
 

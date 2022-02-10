@@ -8,6 +8,7 @@ void main() {
   runApp(
     GetMaterialApp(
       title: "Tracking",
+      debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
