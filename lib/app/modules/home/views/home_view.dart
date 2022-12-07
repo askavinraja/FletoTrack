@@ -12,7 +12,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_curved_line/maps_curved_line.dart';
+import 'package:saas_web_app/app/modules/home/views/osm_directions_response.dart';
+import 'package:saas_web_app/app/modules/home/views/polylines.dart';
+import 'package:saas_web_app/app/modules/home/views/syncfusion_maps.dart';
 import 'package:saas_web_app/app/routes/app_pages.dart';
+import 'package:saas_web_app/main.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:puppeteer/puppeteer.dart';
 import 'dart:io' as ioo;
@@ -235,15 +239,32 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: Text(
           'Fleto Ride Tracking ${bookingId == null ? "" : "#" + bookingId}',
-          style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.bold, color: Colors.white),
+          style: boldTextStyle,
         ),
         centerTitle: true,
         backgroundColor: Colors.black.withOpacity(0.8),
+        actions: [
+          // InkWell(
+          //     onTap: () async {
+          //       await polylineFromOSM();
+          //       Get.to(SyncfusionMapsHome());
+          //     },
+          //     child: Container(
+          //       margin: const EdgeInsets.all(10.0),
+          //       color: Colors.red,
+          //       child: Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: Text(
+          //           "OSM",
+          //           style: boldTextStyle,
+          //         ),
+          //       ),
+          //     )),
+        ],
       ),
       body: Stack(
         children: [
-          bookingId != null
+          bookingId == null
               ? Center(
                   child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -262,7 +283,7 @@ class _HomeViewState extends State<HomeView> {
                     )
                   ],
                 ))
-              : isLoading == true
+              : isLoading
                   ? Center(
                       child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -315,12 +336,44 @@ class _HomeViewState extends State<HomeView> {
                     ),
           Positioned(
             bottom: 0,
-            child: RaisedButton(
-              color: Colors.amberAccent,
-              onPressed: () async {
-                Get.toNamed(Routes.FIREBASE);
-              },
-              child: Text("View DB"),
+            child: Row(
+              children: [
+                RaisedButton(
+                  color: Colors.amberAccent,
+                  onPressed: () async {
+                    Get.toNamed(Routes.FIREBASE);
+                  },
+                  child: Text("View DB"),
+                ),
+                RaisedButton(
+                  color: Colors.amberAccent,
+                  onPressed: () async {
+                    // Get.toNamed(Routes.FIREBASE);
+                    setState(() {
+                      bookingId = "sample";
+                      isLoading = false;
+                      polylines = getPolylineSample();
+                      markers.add(Marker(
+                        markerId: MarkerId("from"),
+                        position: samplePolylines[0],
+                      ));
+                      markers.add(Marker(
+                        markerId: MarkerId("to"),
+                        position: samplePolylines[samplePolylines.length - 1],
+                      ));
+                    });
+                  },
+                  child: Text("View Sample Map"),
+                ),
+                RaisedButton(
+                  color: Colors.amberAccent,
+                  onPressed: () async {
+                    await polylineFromOSM();
+                    Get.to(SyncfusionMapsHome());
+                  },
+                  child: Text("View OSM Map"),
+                ),
+              ],
             ),
           )
         ],

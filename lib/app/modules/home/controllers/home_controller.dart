@@ -86,57 +86,57 @@ class HomeController extends GetxController {
     }
   }
 
-  void connectAndListen() {
-    var customerLoc = LatLng(0, 0);
-    var destination = LatLng(0, 0);
+  // void connectAndListen() {
+  //   var customerLoc = LatLng(0, 0);
+  //   var destination = LatLng(0, 0);
 
-    socket = IO.io('https://reciprocal.co.in/',
-        IO.OptionBuilder().setTransports(['websocket']).build());
+  //   socket = IO.io('https://reciprocal.co.in/',
+  //       IO.OptionBuilder().setTransports(['websocket']).build());
 
-    socket.onConnect((_) {
-      print('connect');
+  //   socket.onConnect((_) {
+  //     print('connect');
 
-      isConnected = true;
+  //     isConnected = true;
 
-      Fluttertoast.showToast(msg: "SOCKET CONNECTED");
+  //     Fluttertoast.showToast(msg: "SOCKET CONNECTED");
 
-      // socket.emit('msg', 'test');
+  //     // socket.emit('msg', 'test');
 
-      sendDataToSocket("62021a49b12f28ef116519e6");
+  //     sendDataToSocket("62021a49b12f28ef116519e6");
 
-      socket.on('message', (data) {
-        log("MESSAGE RECIEVED $data");
-      });
+  //     socket.on('message', (data) {
+  //       log("MESSAGE RECIEVED $data");
+  //     });
 
-      socket.on('booking', (data) {
-        if (socket != null && isConnected) {
-          // toast("UPDATED DATA${data}");
-          log("UPDATED DATA${data}");
-          print("driver location" + data.toString());
-          // isDriverAccepted = true;
-          // update();
-          if (data != null) {
-            if (data['status'] != null) {
-              // checkStatusForSocket(data);
-            }
-            if (data['driverLoc'] != null) {
-              updateDriverMarker(data);
-              // streamSocket.addResponse(data.toString());
-              // }
-              //update();
-            }
-          }
-        }
-      });
-    });
+  //     socket.on('booking', (data) {
+  //       if (socket != null && isConnected) {
+  //         // toast("UPDATED DATA${data}");
+  //         log("UPDATED DATA${data}");
+  //         print("driver location" + data.toString());
+  //         // isDriverAccepted = true;
+  //         // update();
+  //         if (data != null) {
+  //           if (data['status'] != null) {
+  //             // checkStatusForSocket(data);
+  //           }
+  //           if (data['driverLoc'] != null) {
+  //             updateDriverMarker(data);
+  //             // streamSocket.addResponse(data.toString());
+  //             // }
+  //             //update();
+  //           }
+  //         }
+  //       }
+  //     });
+  //   });
 
-    socket.onDisconnect((_) {
-      isConnected = false;
-      update();
+  //   socket.onDisconnect((_) {
+  //     isConnected = false;
+  //     update();
 
-      print('disconnect connected status $isConnected');
-    });
-  }
+  //     print('disconnect connected status $isConnected');
+  //   });
+  // }
 
   sendDataToSocket(id) {
     if (id != null) {
@@ -170,6 +170,7 @@ class HomeController extends GetxController {
     if (socket != null) {
       socket.close();
       socket.dispose();
+
       Fluttertoast.showToast(msg: "SOCKET DISCONNECTED ${socket.connected}");
     }
   }
